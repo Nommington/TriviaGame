@@ -4,8 +4,15 @@ var humans = ["human1.jpg", "human2.jpg", "human3.jpg", "human4.jpg", "human5.jp
 var spentHumans = [];
 var spentCylons = [];
 var timeLeft=5;
+var rightGuess = 0;
+var wrongGuess = 0;
 
-    $("body").on("click", "#startBtn", function choose() {
+
+$(".container").on("click", "#startBtn", choose);
+
+    function choose() {
+        console.log(spentCylons);
+        
         $("#gameArea").empty();
         if (spentCylons.length===12) {
             //display stats
@@ -14,7 +21,7 @@ var timeLeft=5;
         else {
             timeLeft = 5;
             // Generates a group of 3 humans and 1 cylon into imgTray
-            // while (spentCylons.length<12) {
+            
                 var imgTray = [];
                 k=0;
                 while (k<3) {
@@ -56,26 +63,53 @@ var timeLeft=5;
                     colonistIcon.attr("id", cylonShuffle[l]);
                     $("#gameArea").append(colonistIcon);
                 }
-                cylonDetector = false;
+                
+                
+                
                 $("#gameArea").on("click", ".possibleToaster", function(){
                     var shuffleId = $(this).attr("id");
                     console.log(shuffleId);
                     var imgPosition = (imgTray).indexOf(shuffleId);
                     console.log(imgPosition);
+                    clearTimeout(timerVar);
                     if (imgPosition===3) {
                         cylonDetector = true;
                         correct();
                         console.log("CYLON!");
                     }
+                    else {
+                        incorrect();
+                    }
                 });
             }
-    });
+        
+            var timerVar = setInterval(timer, 1000);
+            function timer() {
+                console.log(timeLeft);
+                if (timeLeft == 0) {
+                    clearTimeout(timerVar);
+                    incorrect();
+                }
+                else {
+                    $("#timer").empty();
+                    $("#timer").append("<h2>You have "+timeLeft+" seconds remaining.</h2>");
+                    timeLeft--;
+                }
+            }
+        
+    }
+    
     function incorrect() {
-
+        setTimeout(choose, 3000);
+        wrongGuess++;
+        $("#gameArea").empty();
+        $("#gameArea").append("<h1>YOU'RE DEAD.</h1>");
     }
     function correct() {
         //add a timer here
         setTimeout(choose, 3000);
-        $("#gameArea").append("<p>CYLON IDENTIFIED.</p><p>Well done, cadet.</p>");
+        rightGuess++;
+        $("#gameArea").empty();
+        $("#gameArea").append("<h1>CYLON IDENTIFIED.</h1><p>Well done, cadet.</p>");
     }
 });
