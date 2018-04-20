@@ -8,7 +8,7 @@ var rightGuess = 0;
 var wrongGuess = 0;
 
 
-$(".container").on("click", "#startBtn", choose);
+$("#startBtn").on("click", null, choose);
 
     function choose() {
         console.log(spentCylons);
